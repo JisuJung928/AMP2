@@ -358,8 +358,8 @@ def calc_effm(target,carrier_type,Temp,oper):
 	# symmetry operation
 	deriv_tensor_oper = np.zeros_like(deriv_tensor,dtype=float)
 	for oper_line in oper:
-		oper_xyz = np.matmul(np.linalg.inv(rec_axis),np.matmul(oper_line,rec_axis))
-		deriv_tensor_oper = deriv_tensor_oper+np.matmul(np.transpose(oper_xyz),np.matmul(deriv_tensor,oper_xyz))
+		oper_xyz = np.asmatrixmul(np.linalg.inv(rec_axis),np.asmatrixmul(oper_line,rec_axis))
+		deriv_tensor_oper = deriv_tensor_oper+np.asmatrixmul(np.transpose(oper_xyz),np.asmatrixmul(deriv_tensor,oper_xyz))
 	deriv_tensor = deriv_tensor_oper/float(len(oper))
 
 	deriv_mat = np.real(np.linalg.inv(deriv_tensor))
@@ -462,7 +462,7 @@ def read_operation(poscar):
 	import spglib
 	[axis,atom_pos] = read_poscar(poscar)
 
-	L = np.mat(axis)
+	L = np.asmatrix(axis)
 	pos = []
 	atom_type = []
 	atom_dic = {}
@@ -475,7 +475,7 @@ def read_operation(poscar):
 			type_dic[index] = [line[3],line[4]]
 			index = index+1
 		atom_type.append(atom_dic[line[4]])
-	D = np.mat(pos)
+	D = np.asmatrix(pos)
 	Cell = (L,D,atom_type)
 
 	rot_oper = np.ndarray.tolist(spglib.get_symmetry(Cell,symprec=1e-5)['rotations'])

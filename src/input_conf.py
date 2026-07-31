@@ -77,8 +77,8 @@ def input_conf(conf):
 # This function is for overriding the user's input into default input
 def inp_override(source,override):
 	for key in list(override.keys()):
-		if isinstance(source, collections.Mapping):
-			if isinstance(override[key], collections.Mapping) and override[key]:
+		if isinstance(source, collections.abc.Mapping):
+			if isinstance(override[key], collections.abc.Mapping) and override[key]:
 				returned = inp_override(source.get(key, {}),override[key])
 				source[key] = returned
 			else:

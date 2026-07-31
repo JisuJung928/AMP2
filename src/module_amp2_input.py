@@ -625,7 +625,7 @@ def read_poscar(poscar):
 def impose_atom_type_index(axis,atom_pos):
 	import spglib
 	import numpy as np
-	L = np.mat(axis)
+	L = np.asmatrix(axis)
 	pos = []
 	atom_type = []
 	atom_dic = {}
@@ -638,9 +638,10 @@ def impose_atom_type_index(axis,atom_pos):
 			type_dic[index] = [line[3],line[4]]
 			index = index+1
 		atom_type.append(atom_dic[line[4]])
-	D = np.mat(pos)
+	D = np.asmatrix(pos)
 	Cell = (L,D,atom_type)
-	equ_atoms = spglib.get_symmetry_dataset(Cell,symprec=2e-3)['equivalent_atoms']
+	dataset = spglib.get_symmetry_dataset(Cell,symprec=2e-3)
+	equ_atoms = dataset.equivalent_atoms
 	new_type_dic = {}
 	new_index = [1 for x in range(index)]
 	new_atom_pos = []
@@ -684,7 +685,7 @@ def write_poscar(axis,atom_pos,out_pos,title):
 def get_primitive_cell(axis,atom_pos):
 	import spglib
 	import numpy as np
-	L = np.mat(axis)
+	L = np.asmatrix(axis)
 	pos = []
 	atom_type = []
 	atom_dic = {}
@@ -697,10 +698,11 @@ def get_primitive_cell(axis,atom_pos):
 			type_dic[index] = [line[3],line[4]]
 			index = index+1
 		atom_type.append(atom_dic[line[4]])
-	D = np.mat(pos)
+	D = np.asmatrix(pos)
 	Cell = (L,D,atom_type)
 	prim_cell = spglib.find_primitive(Cell,symprec=2e-3)
-	equ_atoms = spglib.get_symmetry_dataset(prim_cell,symprec=2e-3)['equivalent_atoms']
+	dataset = spglib.get_symmetry_dataset(Cell,symprec=2e-3)
+	equ_atoms = dataset.equivalent_atoms
 	prim_axis = prim_cell[0].tolist()
 	prim_pos = prim_cell[1].tolist()
 	prim_type = prim_cell[2].tolist()
